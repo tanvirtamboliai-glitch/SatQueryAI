@@ -8,7 +8,7 @@ echo.
 cd /d %~dp0
 
 echo [1/2] Launching Backend FastAPI Server (Port 8000)...
-start "SatQuery AI - Backend" cmd /k "cd /d "%~dp0" && .\venv\Scripts\python.exe -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000"
+start "SatQuery AI - Backend" cmd /k "cd /d "%~dp0" && .\.venv\Scripts\python.exe -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000"
 
 timeout /t 3 /nobreak >nul
 

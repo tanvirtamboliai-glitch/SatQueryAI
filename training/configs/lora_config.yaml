@@ -1,0 +1,53 @@
+# LoRA & QLoRA Hyperparameter Configuration for Remote Sensing Vision-Language Adaptation
+model:
+  base_model_name_or_path: "MBZUAI/geochat-7b"
+  torch_dtype: "bfloat16"
+  use_qlora: true
+  load_in_4bit: true
+  bnb_4bit_quant_type: "nf4"
+  bnb_4bit_compute_dtype: "bfloat16"
+  bnb_4bit_use_double_quant: true
+
+peft:
+  peft_type: "LORA"
+  r: 16
+  lora_alpha: 32
+  target_modules:
+    - "q_proj"
+    - "v_proj"
+    - "k_proj"
+    - "o_proj"
+    - "gate_proj"
+    - "up_proj"
+    - "down_proj"
+  lora_dropout: 0.05
+  bias: "none"
+  task_type: "CAUSAL_LM"
+
+training:
+  output_dir: "./checkpoints/geochat_rs_lora"
+  num_train_epochs: 3
+  per_device_train_batch_size: 4
+  gradient_accumulation_steps: 8
+  learning_rate: 0.0002
+  lr_scheduler_type: "cosine"
+  warmup_ratio: 0.03
+  weight_decay: 0.01
+  logging_steps: 10
+  save_strategy: "epoch"
+  evaluation_strategy: "steps"
+  eval_steps: 100
+  save_total_limit: 2
+  fp16: false
+  bf16: true
+  gradient_checkpointing: true
+  dataloader_num_workers: 4
+
+datasets:
+  train:
+    - name: "VRSBench-Instruction"
+      weight: 0.5
+    - name: "RSVQA-HR"
+      weight: 0.3
+    - name: "LEVIR-CC"
+      weight: 0.2
